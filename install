@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Install non pip dependencies
+
+# Install pip dependencies
+
+# Install to local python lib folder
+
+# Test a command
