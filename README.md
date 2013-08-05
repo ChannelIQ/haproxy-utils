@@ -29,7 +29,7 @@ sudo python setup.py install
 
 *  Automagically
 ```bash
-curl -L https://raw.github.com/ChannelIQ/haproxy-utils/master/install | sudo bash
+bash <(curl -s https://raw.github.com/ChannelIQ/haproxy-utils/master/install)
 ```
 
 #Examples
