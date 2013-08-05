@@ -3,8 +3,6 @@ from haproxyutils import log
 
 conn = control.HAProxyStatsConnection()
 
-print conn.get_weight('all-proxies-non-sticky', 'ninjaproxy_106')
-
 print conn.set_weight('all-proxies-non-sticky', 'ninjaproxy_106', 200)
 
 print conn.get_weight('all-proxies-non-sticky', 'ninjaproxy_106')

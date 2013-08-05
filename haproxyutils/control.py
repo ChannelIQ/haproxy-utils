@@ -43,12 +43,11 @@ class HAProxyStatsConnection():
 
     def run(fn):
         def _fn(self, *args, **kwargs):
-            return self.execute(fn(self, *args, **kwargs))
+            self.execute(fn(self, *args, **kwargs))
         return _fn
 
-    @run
     def get_weight(self, backend, server):
-        return 'get weight {0}/{1}'.format(backend, server)
+        return map(int, self.execute('get weight {0}/{1}'.format(backend, server))[0].replace(')','').split('(initial'))
 
     @run
     def set_weight(self, backend, server, weight):
@@ -68,27 +67,25 @@ class HAProxyStatsConnection():
 
     @run
     def clear_counters_all(self):
-        return 'clear all counters'
+        return 'clear counters all'
 
-    @run
     def help(self):
-        return 'help'
+        return ''.join(self.execute('help'))
 
     @run
     def set_timeout_cli(self, delay):
         return 'set timeout cli {0}'.format(delay)
 
-    @run
+    # will test and update once my haproxy actually has errors, lolz
     def show_errors(self, iid=''):
-        return 'show errors {0}'.format(iid)
+        return ''.join(self.execute('show errors {0}'.format(iid)))
 
-    @run
+    # need to update this and parse out/cast appropriately
     def show_info(self):
-        return 'show info'
+        return ''.join(self.execute('show info'))
 
-    @run
     def show_sess(self, id=''):
-        return 'show sess {0}'.format(id)
+        return ''.join(self.execute('show sess {0}'.format(id))).split()
 
     @run
     def show_stat(self, iid='', type='', sid=''):
