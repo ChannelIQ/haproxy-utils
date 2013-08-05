@@ -6,9 +6,30 @@ Goals
 *  supplement statistics available through the stats socket with statistics from log files
 
 Limitations/Requirements
-* log parsing is not very robust at the moment thus the log format requirements are pretty rigid
-* for example:
-``Aug  3 20:41:28 localhost haproxy[7466]: 10.80.111.24:65168 [03/Aug/2013:20:41:28.190] non-sticky all-proxies-non-sticky/ninjaproxy_106 0/0/68/195/349 200 6040 - - ---- 0/0/0/0/0 0/0 "GET http://ipogre.com/ HTTP/1.1"``
+*  log parsing is not very robust at the moment thus the log format requirements are pretty rigid
+*  for example:
+```Aug  3 20:41:28 localhost haproxy[7466]: 10.80.111.24:65168 [03/Aug/2013:20:41:28.190] non-sticky all-proxies-non-sticky/ninjaproxy_106 0/0/68/195/349 200 6040 - - ---- 0/0/0/0/0 0/0 "GET http://ipogre.com/ HTTP/1.1"``
+
+Installation
+*  With Git:
+```
+git clone https://github.com/ChannelIQ/haproxy-utils.git
+cd haproxy-utils
+sudo python setup.py install
+```
+*  Without git
+```
+cd /tmp
+wget https://github.com/ChannelIQ/haproxy-utils/archive/master.zip -O haproxy-utils.zip
+unzip haproxy-utils.zip
+cd haproxy-utils-master
+sudo python setup.py install
+```
+
+*  Automagically
+```
+curl -L https://raw.github.com/ChannelIQ/haproxy-utils/master/install | sudo bash
+```
 
 Examples
 

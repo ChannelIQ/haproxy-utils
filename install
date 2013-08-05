@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# Install non pip dependencies
+cd /tmp
+wget https://github.com/ChannelIQ/haproxy-utils/archive/master.zip -O haproxy-utils.zip
+unzip haproxy-utils.zip
+cd haproxy-utils-master
+sudo python setup.py install
 
-# Install pip dependencies
-
-# Install to local python lib folder
-
-# Test a command

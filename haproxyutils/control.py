@@ -1,5 +1,3 @@
-#from haproxy import haproxy
-import logging
 import socket
 import select
 import sys
@@ -9,8 +7,6 @@ from time import time
 from traceback import format_exc
 
 DEFAULT_SOCKET_LOCATION = '/tmp/haproxy_socket'
-
-#logger = logging.getLogger(__name__)
 
 class TimeoutException(Exception):
     pass
