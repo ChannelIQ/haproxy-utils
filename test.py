@@ -27,9 +27,8 @@ print conn.show_sess()
 
 print conn.show_stat()
 
-
 logs = log.get_logs()
-for average in log.getAverageResponseTime(logs, aggregate_by='backend_name', sort_by='tt', sort_order='descending'):
+for average in log.getAverageResponseTime(logs, aggregate_by='backend_server_combo', sort_by='tt', sort_order='descending'):
     print average
 
 print len(logs)

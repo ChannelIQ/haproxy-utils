@@ -22,6 +22,7 @@ class HAProxyLog:
         self.client_port = int(split_ip_port[1])
         self.accept_date = datetime.strptime(split_line[offset + 6].replace('[', '').replace(']', ''), '%d/%b/%Y:%H:%M:%S.%f')
         self.frontend_name = split_line[offset + 7]
+        self.backend_server_combo = split_line[offset + 8]
         split_backend_server = split_line[offset + 8].split('/')
         self.backend_name = split_backend_server[0]
         self.server_name = split_backend_server[1]
