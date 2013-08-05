@@ -75,6 +75,10 @@ class HAProxyStatsConnection():
         return 'help'
 
     @run
+    def set_timeout_cli(self, delay):
+        return 'set timeout cli {0}'.format(delay)
+
+    @run
     def show_errors(self, iid=''):
         return 'show errors {0}'.format(iid)
 

@@ -1,6 +1,11 @@
 import os
 import fileinput
 import traceback
+import time
+import subprocess
+import select
+import operator
+from math import sqrt
 from urlparse import urlparse
 from collections import defaultdict
 from datetime import datetime
@@ -52,26 +57,26 @@ class HAProxyLog:
         self.http_version = split_line[19].split('/')[1].replace('"', '')
 
 
-def get_logs(num_logs=10000, log_file=DEFAULT_LOG_FILE):
+def get_logs(log_file=DEFAULT_LOG_FILE, num_lines=10000):
     logs = []
-    for line in fileinput.input():
-#    print os.popen('tail -n {num_logs} {log_file}'.format(**locals())).read()[0]
-    #print _tail(file(log_file), num_logs)
-    #exit()
-#    for line in _tail(file(log_file), num_logs).split('\n'):
+    for line in _tail(log_file, num_lines, blocking=True):
         try:
-#            if 'server' in line:
-            logs.append(HAProxyLog(line))
+            if not 'UP' in line and \
+               not 'DOWN' in line and \
+               not ' stopped ' in line and \
+               not '<BADREQ>' in line and \
+               not ' Pausing ' in line and \
+               not ' started.' in line and \
+               not ' Stopping ' in line:
+                 logs.append(HAProxyLog(line))
         except Exception, e:
-            print line.strip() + "excluded from analysis"
+            print line.strip() + " excluded from analysis"
             print len(logs)
             print e
             traceback.print_exc()
-        #    exit()
-    print logs[0]
     return logs
 
-def getAverageResponseTime(logs, aggregate_by=''):
+def getAverageResponseTime(logs, aggregate_by='server_name', sort_by='tr', sort_order='ascending'):
     averages = {}
     for log in logs:
         if getattr(log, aggregate_by) in averages:
@@ -81,36 +86,42 @@ def getAverageResponseTime(logs, aggregate_by=''):
             averages[getattr(log, aggregate_by)] = {'tr': [log.tr], 'tt': [log.tt]}
 
     for item in averages:
-        length = float(len(averages[item]['tr']))
-        averages[item]['tr_average'] = sum(averages[item]['tr']) / length
-        averages[item]['tt_average'] = sum(averages[item]['tt']) / length
-        print item, averages[item]['tr_average'], averages[item]['tt_average'], length
+        length = len(averages[item]['tr'])
+        averages[item]['tr_count'] = length
+        averages[item]['tr_average'] = sum(averages[item]['tr']) / float(length)
+        averages[item]['tr_std'] = sqrt(sum((x - averages[item]['tr_average'])**2 for x in averages[item]['tr']) / float(length))
+        averages[item]['tt_count'] = length
+        averages[item]['tt_average'] = sum(averages[item]['tt']) / float(length)
+        averages[item]['tt_std'] = sqrt(sum((x - averages[item]['tt_average'])**2 for x in averages[item]['tt']) / float(length))
+        del averages[item]['tr']
+        del averages[item]['tt']
 
-# http://stackoverflow.com/questions/136168/get-last-n-lines-of-a-file-with-python-similar-to-tail
-def _tail(f, window=20):
-    BUFSIZ = 1024
-    f.seek(0, 2)
-    bytes = f.tell()
-    size = window
-    block = -1
-    data = []
-    while size > 0 and bytes > 0:
-        if (bytes - BUFSIZ > 0):
-            # Seek back one whole BUFSIZ
-            f.seek(block*BUFSIZ, 2)
-            # read BUFFER
-            data.append(f.read(BUFSIZ))
-        else:
-            # file too small, start from begining
-            f.seek(0,0)
-            # only read what was not read
-            data.append(f.read(bytes))
-        linesFound = data[-1].count('\n')
-        size -= linesFound
-        bytes -= BUFSIZ
-        block -= 1
-    return '\n'.join(''.join(data).splitlines()[-window:])
+    if 'ascending' in sort_order:
+        return sorted(averages.iteritems(), key=lambda x: x[1][sort_by + '_average'])
+    elif 'descending' in sort_order:
+        return sorted(averages.iteritems(), key=lambda x: x[1][sort_by + '_average'], reverse=True)
 
-logs = get_logs()
-getAverageResponseTime(logs, aggregate_by='server_name')
-
+def _tail(filename, num_lines, blocking=False):
+    print locals()
+    log_lines = []
+    tail_command = ['tail', '-n', str(num_lines), filename]
+    if blocking:
+        f = subprocess.Popen(tail_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        while True:
+            line = f.stdout.readline()
+            if not line:
+                break
+            log_lines.append(line)
+    else:
+        # Doesnt work yet...
+        f = subprocess.Popen(tail_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = select.poll()
+        p.register(f.stdout)
+        while True:
+            if p.poll(1):
+                line = f.stdout.readline()
+                if not line:
+                    break
+                log_lines.append(line)
+            time.sleep(1)
+    return log_lines
