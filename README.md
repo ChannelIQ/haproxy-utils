@@ -8,14 +8,14 @@ Goals
 Limitations/Requirements
 *  log parsing is not very robust at the moment thus the log format requirements are pretty rigid
 *  for example:
-```Aug  3 20:41:28 localhost haproxy[7466]: 10.80.111.24:65168 [03/Aug/2013:20:41:28.190] non-sticky all-proxies-non-sticky/ninjaproxy_106 0/0/68/195/349 200 6040 - - ---- 0/0/0/0/0 0/0 "GET http://ipogre.com/ HTTP/1.1"``
+```Aug  3 20:41:28 localhost haproxy[7466]: 10.80.111.24:65168 [03/Aug/2013:20:41:28.190] non-sticky all-proxies-non-sticky/ninjaproxy_106 0/0/68/195/349 200 6040 - - ---- 0/0/0/0/0 0/0 "GET http://ipogre.com/ HTTP/1.1"```
 
 Installation
-*  With Git:
+*  With git
 ```
-git clone https://github.com/ChannelIQ/haproxy-utils.git
-cd haproxy-utils
-sudo python setup.py install
+git clone https://github.com/ChannelIQ/haproxy-utils.git 
+cd haproxy-utils 
+sudo python setup.py install 
 ```
 *  Without git
 ```
