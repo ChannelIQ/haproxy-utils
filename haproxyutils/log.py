@@ -130,7 +130,7 @@ def getAverageResponseTime(logs, aggregate_by='server_name', sort_by='tr', sort_
 def get_daily_averages_by_domain(logs, num_days):
     now = datetime.datetime.now()
     averages = []
-    for num_days_ago in reversed(range(1, num_days)):
+    for num_days_ago in reversed(range(0, num_days)):
         enddt = now - datetime.timedelta(days=num_days_ago)
         startdt = enddt - datetime.timedelta(days=1)
         filtered_logs = filter_logs_by_datetime(logs, startdt=startdt, enddt=enddt)
