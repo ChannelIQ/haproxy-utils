@@ -5,11 +5,11 @@ import time
 import subprocess
 import select
 import operator
+import datetime
+
 from math import sqrt
 from urlparse import urlparse
 from collections import defaultdict
-from datetime import datetime
-
 
 DEFAULT_LOG_FILE = '/var/log/haproxy_1.log'
 
@@ -20,7 +20,7 @@ class HAProxyLog:
         split_ip_port = split_line[offset + 5].split(':')
         self.client_ip = split_ip_port[0]
         self.client_port = int(split_ip_port[1])
-        self.accept_date = datetime.strptime(split_line[offset + 6].replace('[', '').replace(']', ''), '%d/%b/%Y:%H:%M:%S.%f')
+        self.accept_date = datetime.datetime.strptime(split_line[offset + 6].replace('[', '').replace(']', ''), '%d/%b/%Y:%H:%M:%S.%f')
         self.frontend_name = split_line[offset + 7]
         self.backend_server_combo = split_line[offset + 8]
         split_backend_server = split_line[offset + 8].split('/')
@@ -61,6 +61,8 @@ class HAProxyLog:
             self.http_version = 'unknown'
 
 def get_logs(log_file=DEFAULT_LOG_FILE, num_lines=10000):
+    """Read logs from log file and parse all of them, returns an array of log objects.
+       Can specify the startdt and enddt (as a datetime)"""
     logs = []
     for line in _tail(log_file, num_lines, blocking=True):
         try:
@@ -78,6 +80,23 @@ def get_logs(log_file=DEFAULT_LOG_FILE, num_lines=10000):
             print e
             traceback.print_exc()
     return logs
+
+def filter_logs_by_datetime(unfiltered_logs, startdt=None, enddt=None):
+    logs = []
+    for log in unfiltered_logs:
+        if startdt is None and enddt is None:
+            logs.append(log)
+        elif not startdt is None and not enddt is None:
+            if log.accept_date < enddt and log.accept_date > startdt:
+                logs.append(log)
+        elif not startdt is None:
+            if log.accept_date > startdt:
+                logs.append(log)
+        else:
+            if log.accept_date < enddt:
+                logs.append(log)
+    return logs
+
 
 def get_list_of(logs, item='server_name'):
     return list(set([getattr(log, item) for log in logs]))
@@ -106,6 +125,18 @@ def getAverageResponseTime(logs, aggregate_by='server_name', sort_by='tr', sort_
         return sorted(averages.iteritems(), key=lambda x: x[1][sort_by + '_average'])
     elif 'descending' in sort_order:
         return sorted(averages.iteritems(), key=lambda x: x[1][sort_by + '_average'], reverse=True)
+
+
+def get_daily_averages_by_domain(logs, num_days):
+    now = datetime.datetime.now()
+    averages = []
+    for num_days_ago in reversed(range(1, num_days)):
+        enddt = now - datetime.timedelta(days=num_days_ago)
+        startdt = enddt - datetime.timedelta(days=1)
+        filtered_logs = filter_logs_by_datetime(logs, startdt=startdt, enddt=enddt)
+        averages.append(getAverageResponseTime(filtered_logs, aggregate_by='domain', sort_by='tr', sort_order='ascending'))
+    return averages
+
 
 def _tail(filename, num_lines, blocking=False):
     log_lines = []

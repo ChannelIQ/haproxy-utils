@@ -1,6 +1,8 @@
 from haproxyutils import control
 from haproxyutils import log
 from haproxyutils import admin
+import datetime
+import pprint as pp
 
 conn = control.HAProxyStatsConnection()
 
@@ -28,7 +30,17 @@ conn = control.HAProxyStatsConnection()
 
 #print conn.show_stat()
 
-#logs = log.get_logs()
+logs = log.get_logs(num_lines=10000)
+now = datetime.datetime.now()
+pp.pprint(log.get_daily_averages_by_domain(logs, 10))
+#    pp.pprint(averages)
+
+#print len(logs)
+#yesterday = datetime.datetime.now()-datetime.timedelta(days=1)
+#logs = log.filter_logs_by_datetime(logs, startdt=yesterday, enddt=datetime.datetime.now())
+#print len(logs)
+
+
 #for average in log.getAverageResponseTime(logs, aggregate_by='backend_server_combo', sort_by='tt', sort_order='descending'):
 #    print average
 
@@ -42,6 +54,6 @@ conn = control.HAProxyStatsConnection()
 
 #print admin.get_frontends()
 
-admin.reset_weights()
+#admin.reset_weights()
 
 #admin.set_weights(2, backend='all-proxies-non-sticky')
