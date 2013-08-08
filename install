@@ -1,6 +1,8 @@
 #!/bin/bash
 
 cd /tmp
+sudo apt-get install unzip
+sudo apt-get install python-pip
 wget https://github.com/ChannelIQ/haproxy-utils/archive/master.zip -O haproxy-utils.zip
 unzip haproxy-utils.zip
 cd haproxy-utils-master
