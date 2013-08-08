@@ -30,15 +30,10 @@ conn = control.HAProxyStatsConnection()
 
 #print conn.show_stat()
 
+# print the last ten days of log times
 logs = log.get_logs(num_lines=10000)
 now = datetime.datetime.now()
 pp.pprint(log.get_daily_averages_by_domain(logs, 10))
-#    pp.pprint(averages)
-
-#print len(logs)
-#yesterday = datetime.datetime.now()-datetime.timedelta(days=1)
-#logs = log.filter_logs_by_datetime(logs, startdt=yesterday, enddt=datetime.datetime.now())
-#print len(logs)
 
 
 #for average in log.getAverageResponseTime(logs, aggregate_by='backend_server_combo', sort_by='tt', sort_order='descending'):
