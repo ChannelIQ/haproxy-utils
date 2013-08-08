@@ -55,8 +55,10 @@ class HAProxyLog:
             self.domain = urlparse(self.url).hostname
         else:
             self.domain = self.url
-        self.http_version = split_line[offset + 19].split('/')[1].replace('"', '')
-
+        try:
+            self.http_version = split_line[offset + 19].split('/')[1].replace('"', '')
+        except:
+            self.http_version = 'unknown'
 
 def get_logs(log_file=DEFAULT_LOG_FILE, num_lines=10000):
     logs = []
@@ -76,6 +78,9 @@ def get_logs(log_file=DEFAULT_LOG_FILE, num_lines=10000):
             print e
             traceback.print_exc()
     return logs
+
+def get_list_of(logs, item='server_name'):
+    return list(set([getattr(log, item) for log in logs]))
 
 def getAverageResponseTime(logs, aggregate_by='server_name', sort_by='tr', sort_order='ascending'):
     averages = {}
