@@ -3,9 +3,8 @@ import select
 import sys
 import string
 
+from settings import DEFAULT_SOCKET_LOCATION
 from traceback import format_exc
-
-DEFAULT_SOCKET_LOCATION = '/tmp/haproxy_socket'
 
 class HAProxyStatsConnection():
 
