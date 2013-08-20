@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Backends{% endblock %}
+
+{% block content %}
+<h1>Backends</h1>
+<div id="backends">
+    <table class="center">
+        <thead>
+            <th>Backend</th>
+        </thead>
+        {% for backend in backends %}
+            <tr>
+                <td><a href="/backend_ui/{{ backend }}/">{{ backend }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+sudo rm -r /tmp/haproxy-utils-master
+sudo rm /tmp/haproxy-utils.zip
+
+# Install 
 cd /tmp
 sudo apt-get install unzip
 sudo apt-get install python-pip
@@ -8,3 +12,7 @@ unzip haproxy-utils.zip
 cd haproxy-utils-master
 sudo python setup.py install
 
+# Install webapp
+sudo cp -r haproxyadmin /usr/local/bin
+sudo cp haproxyadmin/haproxyadmin /etc/init.d
+sudo service haproxyadmin start

@@ -1,0 +1,26 @@
+<html>
+    <head>
+    {% block head %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script type=text/javascript src="{{ url_for('static', filename='jquery.js') }}"></script>
+        <script type=text/javascript src="{{ url_for('static', filename='main.js') }}"></script>
+    {% block includes %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href="/ui/">Home</a></li>
+                <li><a href="/frontends_ui/">Frontends</a></li>
+                <li><a href="/backends_ui/">Backends</a></li>
+                <li><a href="/servers_ui/">Servers</a></li>
+                <li><a href="/api_ui/">API</a></li>
+            </ul>
+        </nav>
+        <div id="content">{% block content %}{% endblock %}</div>
+        <div id="footer">
+            {% block footer %}{% endblock %}
+        </div>
+    </body>
+</html>

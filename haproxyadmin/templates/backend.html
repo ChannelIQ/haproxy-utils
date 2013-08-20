@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Backend{% endblock %}
+
+{% block content %}
+<h1>Backend: {{ backend_name }}</h1>
+<form name="backend" method="POST">
+    <input type="submit" name="enable" value="Enable"/>
+    <input type="submit" name="disable" value="Disable"/>
+    <div id="backend">
+        <table class="center">
+            <thead>
+                <th><input type="checkbox" class="selectAll"></th>
+                {% for header in headers %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </thead>
+            {% for server in servers %}
+            <tr>
+                <td><input type="checkbox" name="server_row" value="{{ server.svname }}" class="server_row"></td>
+                <td><a href="/server_ui/{{ server.svname }}/">{{ server.svname }}</a></td>
+                <td>{{ server.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</form>
+{% endblock %}
