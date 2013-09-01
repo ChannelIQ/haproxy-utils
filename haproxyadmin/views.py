@@ -52,11 +52,7 @@ def get_weight(backend, server):
 @app.route('/')
 def api():
     """Print API"""
-    func_list = {}
-    for rule in app.url_map.iter_rules():
-        if rule.endpoint != 'static':
-            func_list[rule.rule] = app.view_functions[rule.endpoint].__doc__
-    return jsonify(func_list)
+    return jsonify(_get_api())
 
 ############
 # Webadmin #
@@ -65,6 +61,9 @@ def api():
 @app.route('/ui/')
 def index():
     return render_template('index.html')
+
+@app.route('/api_ui/')
+    return render_template('api.html', api=_get_api())
 
 @app.route('/frontends_ui/')
 def frontends_ui():
@@ -91,6 +90,13 @@ def servers_ui():
 
 def _responsify(obj):
     return Response(json.dumps(obj, default=lambda o: o.__dict__, indent=2), mimetype='application/json')
+
+def _get_api():
+    func_list = {}
+    for rule in app.url_map.iter_rules():
+        if rule.endpoint != 'static':
+            func_list[rule.rule] = app.view_functions[rule.endpoint].__doc__
+    return func_list
 
 def _get_attribute_names(obj):
     attributes = []

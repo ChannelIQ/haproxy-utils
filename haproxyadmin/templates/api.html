@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}API{% endblock %}
+
+{% block content %}
+<h1>API</h1>
+<div id="api">
+    <table class="center">
+        <thead>
+            <th>URL Pattern</th>
+            <th>Description</th>
+        </thead>
+        {% for func in api %}
+            <tr>
+                <td>{{ func }}</td>
+                <td>{{ api[func] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
