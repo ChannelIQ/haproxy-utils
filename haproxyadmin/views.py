@@ -63,6 +63,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/api_ui/')
+def api_ui():
     return render_template('api.html', api=_get_api())
 
 @app.route('/frontends_ui/')
