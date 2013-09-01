@@ -60,22 +60,27 @@ def api():
 
 @app.route('/ui/')
 def index():
+    """Webui homepage"""
     return render_template('index.html')
 
 @app.route('/api_ui/')
 def api_ui():
+    """Display api in html"""
     return render_template('api.html', api=_get_api())
 
 @app.route('/frontends_ui/')
 def frontends_ui():
+    """List frontends in html"""
     return render_template('frontends.html', frontends=admin.get_frontends())
 
 @app.route('/backends_ui/')
 def backends_ui():
+    """List backends in html"""
     return render_template('backends.html', backends=admin.get_backends())
 
 @app.route('/backend_ui/<backend>/')
 def backend_ui(backend):
+    """Show details about a specific backend in html"""
     servers = admin.get_backend(backend)
 #    headers = _get_attribute_names(servers[0])
     headers = ['Server', 'Status']
@@ -83,6 +88,7 @@ def backend_ui(backend):
 
 @app.route('/servers_ui/')
 def servers_ui():
+    """List all servers in html"""
     return render_template('servers.html')
 
 ####################
