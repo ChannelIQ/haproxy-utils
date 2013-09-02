@@ -65,7 +65,7 @@ def index():
 
 @app.route('/api_ui/')
 def api_ui():
-    """Display api in html"""
+    """Display API in html"""
     return render_template('api.html', api=_get_api())
 
 @app.route('/frontends_ui/')

@@ -1,6 +1,7 @@
 from haproxyutils import control
 from haproxyutils import log
 from haproxyutils import admin
+from haproxyutils import configparser
 import datetime
 import pprint as pp
 
@@ -31,9 +32,9 @@ conn = control.HAProxyStatsConnection()
 #print conn.show_stat()
 
 # print the last ten days of log times
-logs = log.get_logs(num_lines=10000)
-now = datetime.datetime.now()
-pp.pprint(log.get_daily_averages_by_domain(logs, 10))
+#logs = log.get_logs(num_lines=10000)
+#now = datetime.datetime.now()
+#pp.pprint(log.get_daily_averages_by_domain(logs, 10))
 
 
 #for average in log.getAverageResponseTime(logs, aggregate_by='backend_server_combo', sort_by='tt', sort_order='descending'):
@@ -52,3 +53,13 @@ pp.pprint(log.get_daily_averages_by_domain(logs, 10))
 #admin.reset_weights()
 
 #admin.set_weights(2, backend='all-proxies-non-sticky')
+
+#pp.pprint(configparser.get_config(), indent=4)
+
+#pp.pprint(configparser.get_frontend_ports(), indent=4)
+
+pp.pprint(configparser.get_frontend_port('sticky'), indent=4)
+
+pp.pprint(configparser.get_backend_server_addresses('squid-caches'), indent=4)
+
+pp.pprint(configparser.get_server_addresses('sslprivateproxy_4'), indent=4)
