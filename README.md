@@ -42,9 +42,13 @@ conn = control.HAProxyStatsConnection()
 conn.set_weight('all-proxies-non-sticky', 'ninjaproxy_106', 200)
 ```
 
-Run a webservice 
+Run a webservice to expose as an api
 ```bash
 sudo daemon -u root -n haproxyadminapi -r -X "sudo python /home/ubuntu/haproxy-utils/haproxyadmin/views.py"
+```
+or through the service interface
+```bash
+sudo service haproxyadmin start
 ```
 
 ##Todo
