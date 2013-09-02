@@ -1,8 +1,9 @@
 from settings import DEFAULT_CONFIG_LOCATION
 
 
-def get_frontend_ports():
-    config = _parse_config()
+def get_frontend_ports(config=None):
+    if config is None:
+        config = _parse_config()
     frontends = {}
     if 'frontends' in config:
         for frontend in config['frontends']:
@@ -14,6 +15,15 @@ def get_frontend_port(frontend):
     if frontend in frontends:
         return frontends[frontend]
     return None
+
+def get_listen_ports(config=None):
+    if config is None:
+        config = _parse_config()
+    listeners = {}
+    if 'listens' in config:
+        for listener in config['listens']:
+            listeners[listener] = config['listens'][listener]['bind'].split(':')[1]
+    return listeners
 
 def get_backend_server_addresses(backend, config=None):
     if config is None:
@@ -36,11 +46,17 @@ def get_server_addresses(server_name):
 def get_server_names(server_address):
     print 'not done'
 
+def get_all_listening_ports():
+    config = _parse_config()
+    return dict(
+            get_frontend_ports(config=config).items() + \
+            get_listen_ports(config=config).items()
+    )
+
 def get_config():
     return _parse_config()
 
 def _parse_config():
-    """This could probably be less of a hack..."""
     frontends = {}
     backends = {}
     listens = {}

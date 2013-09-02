@@ -1,5 +1,6 @@
 from flask import request, Flask, Response, jsonify, render_template
 from haproxyutils import admin
+from haproxyutils import configparser
 
 import json
 
@@ -48,6 +49,36 @@ def set_weight(backend, server, weight):
 def get_weight(backend, server):
     """Get the weight on a server in a backend"""
     return _responsify(admin.get_weight(backend, server))
+
+@app.route('/get_frontend_ports/')
+def get_frontend_ports():
+    """Get the frontend ports"""
+    return _responsify(configparser.get_frontend_ports())
+
+@app.route('/get_frontend_port/<frontend>/')
+def get_frontend_port(frontend):
+    """Get the port of the supplied frontend"""
+    return _responsify(configparser.get_frontend_port(frontend))
+
+@app.route('/get_listen_ports/')
+def get_listen_ports():
+    """Get the ports that listen sections are listening on"""
+    return _responsify(configparser.get_listen_ports())
+
+@app.route('/get_backend_server_addresses/<backend>/')
+def get_backend_server_addresses(backend):
+    """Get a list of addresses for the given backend"""
+    return _responsify(configparser.get_backend_server_addresses(backend))
+
+@app.route('/get_server_addresses/<server_name>/')
+def get_server_addresses(server_name):
+    """Get any and all addresses of the server_name provided"""
+    return _responsify(configparser.get_server_addresses(server_name))
+
+@app.route('/get_all_listening_ports/')
+def get_all_listening_ports():
+    """Get all of listening ports, this includes backend and listen sections"""
+    return _responsify(configparser.get_all_listening_ports())
 
 @app.route('/')
 def api():

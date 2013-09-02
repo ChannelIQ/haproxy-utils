@@ -63,3 +63,7 @@ pp.pprint(configparser.get_frontend_port('sticky'), indent=4)
 pp.pprint(configparser.get_backend_server_addresses('squid-caches'), indent=4)
 
 pp.pprint(configparser.get_server_addresses('sslprivateproxy_4'), indent=4)
+
+pp.pprint(configparser.get_listen_ports(), indent=4)
+
+pp.pprint(configparser.get_all_listening_ports(), indent=4)

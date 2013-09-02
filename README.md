@@ -1,9 +1,6 @@
-##Credits
-*   socket interfacing code https://github.com/nl5887/python-haproxy
-
 ##Goals
 *  provide simple python bindings for issuing commands to the haproxy stats socket
-*  supplement statistics available through the stats socket with statistics from log files
+*  supplement statistics available through the stats socket with statistics from log files and information from the configuration file
 
 ##Limitations/Requirements
 *  log parsing is not very robust at the moment thus the log format requirements are pretty rigid
