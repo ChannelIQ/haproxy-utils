@@ -10,6 +10,8 @@ app = Flask(__name__)
 # API #
 #######
 
+# need to remove pretty print by default, too much extra data. should only pretty print for chrome firefox ie....
+
 @app.route('/backend/<backend>/')
 def backend(backend):
     """List all servers within a given backend"""
@@ -39,6 +41,16 @@ def enable_server(backend, server):
 def disable_server(backend, server):
     """Disable a server on a backend"""
     return _responsify(admin.disable_server(backend, server))
+
+@app.route('/enable_all_backend_servers/<backend>/')
+def enable_all_backend_servers(backend):
+    """Enable all servers on a backend"""
+    return _responsify(admin.enable_all_backend_servers(backend))
+
+@app.route('/disable_all_backend_servers/<backend>/')
+def disable_all_backend_servers(backend):
+    """Disable all servers on a backend"""
+    return _responsify(admin.disable_all_backend_servers(backend))
 
 @app.route('/set_weight/<backend>/<server>/<weight>/')
 def set_weight(backend, server, weight):

@@ -61,6 +61,18 @@ def enable_server(backend, server):
         return False
     return True
 
+def disable_all_backend_servers(backend):
+    servers = get_servers(backend)
+    for server in servers:
+        disable_server(backend, server)
+    return True
+
+def enable_all_backend_servers(backend):
+    servers = get_servers(backend)
+    for server in servers:
+        enable_server(backend, server)
+    return True
+
 def set_weight(backend, server, weight):
     conn = control.HAProxyStatsConnection()
     return conn.set_weight(backend, server, weight)
@@ -78,16 +90,26 @@ def get_backend(backend):
 def get_frontends():
     return HAProxy().frontends
 
-def get_servers():
+def get_servers(backend=None):
     servers = {}
     backends = HAProxy().backends
-    for backend in backends:
+    if backend is None:
+        for backend in backends:
+            for stat in backends[backend]:
+                if stat.svname in servers:
+                    servers[stat.svname].append(backend)
+                else:
+                    servers[stat.svname] = [backend]
+        return servers
+    elif backend in backends:
         for stat in backends[backend]:
             if stat.svname in servers:
                 servers[stat.svname].append(backend)
             else:
                 servers[stat.svname] = [backend]
-    return servers
+        return servers
+    else:
+        return False
 
 def reset_weights(backend=None):
     """ Takes the name of a backend and resets weights on it.
